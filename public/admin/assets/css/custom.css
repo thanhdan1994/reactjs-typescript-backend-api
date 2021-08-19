@@ -1,0 +1,12 @@
+.form-group label.js-close-image-preview-2 {
+    position: absolute;
+    color: #1100ff;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    background: #fff;
+    border-radius: 50%;
+    align-items: center;
+    margin: 0;
+}

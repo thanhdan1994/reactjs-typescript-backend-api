@@ -14,14 +14,11 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->id();
-            $table->string('category', 200);
-            $table->string('category_slug', 200);
-            $table->string('taxonomy', 200)->default('post');
+            $table->text('name');
+            $table->text('slug');
             $table->bigInteger('parent')->default(0);
+            $table->bigInteger('featured_image')->default(0);
             $table->timestamps();
         });
     }
