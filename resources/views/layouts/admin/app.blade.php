@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-@yield('head')
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Trang quản trị Du Lịch Cổ Thạch</title>
+        <link rel="stylesheet" href="{{asset('admin/assets/vendors/mdi/css/materialdesignicons.min.css')}}">
+        <link rel="stylesheet" href="{{asset('admin/assets/vendors/css/vendor.bundle.base.css')}}">
+        <link rel="stylesheet" href="{{asset('admin/assets/css/style.css')}}">
+        <link rel="stylesheet" href="{{asset('admin/assets/css/custom.css')}}">
+        <link rel="shortcut icon" href="{{asset('admin/assets/images/favicon.png')}}" />
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
+    </head>
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
@@ -82,7 +92,7 @@
                     <a class="nav-link collapsed" data-toggle="collapse" href="#li-products" aria-expanded="false" aria-controls="ui-basic">
                         <span class="menu-title">Quản lý sản phẩm</span>
                         <i class="menu-arrow"></i>
-                        <i class="mdi mdi-food-fork-drink"></i>
+                        <i class="mdi mdi-responsive"></i>
                     </a>
                     <div class="collapse" id="li-products" style="">
                         <ul class="nav flex-column sub-menu">
@@ -135,7 +145,9 @@
         </nav>
         <!-- partial -->
         <div class="main-panel">
-            @yield('content')
+            <div class="content-wrapper">
+                @yield('content')
+            </div>
             <!-- content-wrapper ends -->
             <!-- partial:partials/_footer.html -->
             <footer class="footer">

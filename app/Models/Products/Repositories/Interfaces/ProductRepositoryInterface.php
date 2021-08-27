@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 
 interface ProductRepositoryInterface extends BaseRepositoryInterface
 {
+    public function getAllProducts() : Collection;
+
     public function createProduct(array $data) : Product;
 
     public function findProductById(int $id, $transform = true) : Product;

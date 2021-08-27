@@ -4,14 +4,12 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Images\Image;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable
 {
-    use Notifiable, HasRoles, InteractsWithMedia;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -45,24 +43,14 @@ class User extends Authenticatable implements HasMedia
         return $this->hasRole('Super Admin');
     }
 
-    public function registerMediaCollections() : void
-    {
-        $this->addMediaCollection('images')
-            ->registerMediaConversions(function (Media $media) {
-                $this->addMediaConversion('thumb-350')
-                    ->width(350)
-                    ->height(240);
-            });
-    }
-
     public function thumbnail()
     {
-        return $this->hasOne(Media::class, 'id', 'featured_image');
+        return $this->hasOne(Image::class, 'id', 'featured_image');
     }
 
     public function getThumbnailUrlAttribute()
     {
-        $thumbnail = 'https://kuruma-tabinavi.com/wp-content/themes/campingcardesktop/shared/img/default-camping-car.jpg';
+        $thumbnail = env('APP_URL') . DIRECTORY_SEPARATOR . 'images/none_image.png';
         if ($this->thumbnail !== null) :
             $thumbnail = $this->thumbnail->getUrl('thumb-350');
         endif;

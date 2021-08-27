@@ -1,26 +1,5 @@
 @extends('layouts.admin.app')
 
-@section('head')
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Trang quản trị Du Lịch Cổ Thạch</title>
-        <!-- plugins:css -->
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/mdi/css/materialdesignicons.min.css')}}">
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/css/vendor.bundle.base.css')}}">
-        <!-- endinject -->
-        <!-- Plugin css for this page -->
-        <!-- End plugin css for this page -->
-        <!-- inject:css -->
-        <!-- endinject -->
-        <!-- Layout styles -->
-        <link rel="stylesheet" href="{{asset('admin/assets/css/style.css')}}">
-        <!-- End layout styles -->
-        <link rel="shortcut icon" href="{{asset('admin/assets/images/favicon.png')}}" />
-    </head>
-@endsection
-
 @section('content')
     <div class="page-header">
         <h3 class="page-title">Tạo chuyên mục mới</h3>
@@ -36,23 +15,21 @@
         <div class="col-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <form method="post" class="forms-sample" action="{{ route('admin.categories.store') }}">
+                    <form method="post" class="forms-sample" action="{{ route('admin.brands.store') }}" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-group">
-                            <label for="category">Tên chuyên mục</label>
-                            <input type="text" name="name" class="form-control" id="category" placeholder="tên chuyên mục">
+                            <label for="category">Tên thương hiệu</label>
+                            <input type="text" name="name" class="form-control" placeholder="tên thương hiệu">
                         </div>
                         <div class="form-group">
-                            <label for="parent">Chuyên mục cha</label>
-                            <select class="form-control" id="parent" name="parent">
-                                <option value="0">Chọn danh mục cha...</option>
-                                @foreach($categories as $cat)
-                                    <option value="{{$cat->id}}">{{$cat->name}}</option>
-                                @endforeach
-                            </select>
+                            <label>Logo thương hiệu</label>
+                            <input type="file" name="logo" id="featured_image" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <span data-thumbnail="https://cuoifly.tuoitre.vn/155/0/ttc/r/2020/02/03/logo-ttc-1580721954.png" class="input-group-append file-upload-browse" style="background: url('https://cuoifly.tuoitre.vn/155/0/ttc/r/2020/02/03/logo-ttc-1580721954.png')">
+                                </span>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-gradient-primary mr-2">Submit</button>
-                        <button class="btn btn-light">Cancel</button>
+                        <button type="submit" class="btn btn-gradient-primary mr-2">Lưu</button>
                     </form>
                 </div>
             </div>
@@ -68,5 +45,6 @@
     <script src="{{asset('admin/assets/js/off-canvas.js')}}"></script>
     <script src="{{asset('admin/assets/js/hoverable-collapse.js')}}"></script>
     <script src="{{asset('admin/assets/js/misc.js')}}"></script>
+    <script src="{{asset('admin/assets/js/file-upload.js')}}"></script>
     <!-- endinject -->
 @endsection

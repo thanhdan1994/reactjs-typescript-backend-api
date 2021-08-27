@@ -1,26 +1,5 @@
 @extends('layouts.admin.app')
 
-@section('head')
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Trang quản trị Du Lịch Cổ Thạch</title>
-        <!-- plugins:css -->
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/mdi/css/materialdesignicons.min.css')}}">
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/css/vendor.bundle.base.css')}}">
-        <!-- endinject -->
-        <!-- Plugin css for this page -->
-        <!-- End plugin css for this page -->
-        <!-- inject:css -->
-        <!-- endinject -->
-        <!-- Layout styles -->
-        <link rel="stylesheet" href="{{asset('admin/assets/css/style.css')}}">
-        <!-- End layout styles -->
-        <link rel="shortcut icon" href="{{asset('admin/assets/images/favicon.png')}}" />
-    </head>
-@endsection
-
 @section('content')
     <div class="page-header">
         <h3 class="page-title">Danh sách bài viết</h3>
@@ -36,7 +15,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <form method="GET" action="{{route('admin.posts.index')}}">
+                    <form method="GET" action="{{route('admin.products.index')}}">
                         <div class="form-group">
                             <label for="search">Tìm kiếm bài viết</label>
                             <input type="text" class="form-control" name="q" id="search" placeholder="tìm kiếm bài viết theo tiêu đề bài viết, người tạo">
@@ -45,42 +24,42 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th> STT </th>
+                            <th> Trạng thái </th>
                             <th> Tiêu đề </th>
                             <th> Ảnh </th>
                             <th> Chuyên mục </th>
-                            <th> Hành động </th>
+                            <th> Thương hiệu </th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($products as $key => $product)
                             <tr>
-                                <td class="py-1">
-                                    @if(isset($_GET['page']))
-                                        #{{(($_GET['page'] * config('constants.admin.paginate')) - config('constants.admin.paginate')) + ($key + 1)}}
+                                <td>
+                                    @if ($product->status)
+                                        <label class="badge badge-success">Đang hiển thị</label>
                                     @else
-                                        #{{$key + 1}}
+                                        <label class="badge badge-danger">Nháp</label>
                                     @endif
                                 </td>
-                                <td>{!! \Illuminate\Support\Str::limit($product->name, 30, '...') !!}</td>
-                                <td><img src="{!! $product->thumbnailUrl !!}" style="width: 200px; height: 150px"/></td>
+                                <td class="product-name">
+                                    <a href="{{ route('admin.products.edit', $product->id) }}">{!! $product->name !!}</a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.products.edit', $product->id) }}">
+                                        <img src="{!! $product->thumbnailUrl !!}" style="width: 60px; height: 60px"/>
+                                    </a>
+                                </td>
                                 <td>
                                     {{ $product->category->name }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.products.edit', $product->id) }}" type="button" class="btn btn-outline-info">Sửa</a>
-                                    {{-- <form method="post" action="{{route('admin.products.destroy', $product->id)}}"
-                                          onsubmit="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
-                                        {{method_field('delete')}}
-                                        {{csrf_field()}}
-                                        <button type="submit" class="btn btn-outline-danger">Xóa</button>
-                                    </form> --}}
+                                    {{ $product->brand->name }}
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
-                    @if($products instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
+                    @if($products instanceof \Illuminate\Pagination\LengthAwarePaginator)
                         <div class="pagination-box pt-5 pb-5">
                             <div class="col-md-12">
                                 <div class="pull-center">{{ $products->links('vendor.pagination.custom-pager') }}</div>

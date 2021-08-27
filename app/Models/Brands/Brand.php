@@ -5,13 +5,11 @@ namespace App\Models\Brands;
 use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Images\Image;
 use Illuminate\Support\Str;
 
-class Brand extends Model implements HasMedia
+class Brand extends Model
 {
-    use InteractsWithMedia;
     /**
      * The attributes that are mass assignable.
      *
@@ -28,23 +26,16 @@ class Brand extends Model implements HasMedia
         return $this->hasMany(Product::class);
     }
 
-    public function registerMediaCollections(Media $media = null) : void
-    {
-        $this->addMediaConversion('logo')
-            ->width(220)
-            ->height(48);
-    }
-
     public function thumbnail()
     {
-        return $this->hasOne(Media::class, 'id', 'logo');
+        return $this->hasOne(Image::class, 'id', 'logo');
     }
 
     public function getLogoUrlAttribute()
     {
-        $logo = 'https://kuruma-tabinavi.com/wp-content/themes/campingcardesktop/shared/img/default-camping-car.jpg';
+        $logo = env('APP_URL') . DIRECTORY_SEPARATOR . 'images/none_image.png';
         if ($this->thumbnail) :
-            $logo = $this->thumbnail->getUrl('logo');
+            $logo = $this->thumbnail->url;
         endif;
         return $logo;
     }

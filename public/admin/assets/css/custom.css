@@ -1,12 +1,87 @@
-.form-group label.js-close-image-preview-2 {
+.form-group label.js-close-image-preview {
     position: absolute;
-    color: #1100ff;
-    z-index: 1;
-    width: 18px;
-    height: 18px;
-    font-size: 18px;
-    background: #fff;
-    border-radius: 50%;
-    align-items: center;
-    margin: 0;
+    margin: 15px;
 }
+
+.form-group label.js-close-image-preview:hover {
+    cursor: pointer;
+}
+
+.form-group label.js-close-image-preview i {
+    font-size: 20px;
+}
+
+.card .card-body {
+    padding: 2.25rem;
+}
+
+table td.product-name {
+    max-width: 300px;
+    min-width: 300px;
+    word-break: break-all;
+    white-space: normal;
+    line-height: 1.4;
+}
+
+table td a {
+    color: black;
+}
+
+ul#sortable-images {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+ul#sortable-images li {
+    margin: 0 10px 10px 0;
+    padding: 20px 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+ul#sortable-images li img{
+    min-width: 90px;
+    max-width: 90px;
+    min-height: 60px;
+    max-height: 60px;
+}
+
+ul#sortable-images li i.mdi-close-box {
+    position: absolute;
+    font-size: 20px;
+    margin-top: -20px;
+}
+
+ul#sortable-images li i:hover {
+    cursor: pointer;
+}
+
+.variants ul.list-variants {
+    list-style-type: none;
+}
+
+.variants .list-variants .item {
+    border: 1px solid #eee;
+}
+
+.variants .list-variants .item.active {
+    background-color: #b66dff;
+}
+
+.variants .list-variants .item a {
+    padding: 10px 20px;
+    display: block;
+    color: black;
+    text-decoration: none;
+}
+
+.variants .list-variants .item a span.variant-image {
+    margin-right: 15px;
+}
+
+.variants .list-variants .item a span.variant-image img {
+    width: 50px;
+    height: 50px;
+}
+

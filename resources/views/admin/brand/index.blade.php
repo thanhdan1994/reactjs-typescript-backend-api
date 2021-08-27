@@ -1,26 +1,5 @@
 @extends('layouts.admin.app')
 
-@section('head')
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Trang quản trị Du Lịch Cổ Thạch</title>
-        <!-- plugins:css -->
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/mdi/css/materialdesignicons.min.css')}}">
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/css/vendor.bundle.base.css')}}">
-        <!-- endinject -->
-        <!-- Plugin css for this page -->
-        <!-- End plugin css for this page -->
-        <!-- inject:css -->
-        <!-- endinject -->
-        <!-- Layout styles -->
-        <link rel="stylesheet" href="{{asset('admin/assets/css/style.css')}}">
-        <!-- End layout styles -->
-        <link rel="shortcut icon" href="{{asset('admin/assets/images/favicon.png')}}" />
-    </head>
-@endsection
-
 @section('content')
     <div class="page-header">
         <h3 class="page-title">Danh sách chuyên mục</h3>
@@ -39,33 +18,23 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th> STT </th>
-                            <th> Chuyên mục </th>
-                            <th> Ngày tạo </th>
-                            <th> Ngày cập nhật </th>
-                            <th> Hành động </th>
+                            <th></th>
+                            <th>Thương hiệu</th>
+                            <th>Ngày tạo</th>
+                            <th>Ngày cập nhật</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($brands as $key => $brand)
+                        @foreach($brands as $brand)
                             <tr>
                                 <td class="py-1">
-                                    @if(isset($_GET['page']))
-                                        #{{(($_GET['page'] * config('constants.admin.paginate')) - config('constants.admin.paginate')) + ($key + 1)}}
-                                    @else
-                                        #{{$key + 1}}
-                                    @endif
+                                    <a href="{{ route('admin.brands.edit', $brand->id) }}">
+                                        <img src="{!! $brand->logoUrl !!}" style="width: 149px; height: 40px"/>
+                                    </a>
                                 </td>
-                                <td>{!! $brand->name !!}</td>
+                                <td><a href="{{ route('admin.brands.edit', $brand->id) }}">{!! $brand->name !!}</a></td>
                                 <td> {!! $brand->created_at !!} </td>
                                 <td> {!! $brand->updated_at !!} </td>
-                                @if(\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())
-                                    <td>
-                                        <a href="{{ route('admin.brands.edit', $brand->id) }}" type="button" class="btn btn-outline-info">Sửa</a>
-                                    </td>
-                                    @else
-                                    <td>Bạn đếu có quyền chỉnh sửa nhé</td>
-                                @endif
                             </tr>
                         @endforeach
                         </tbody>

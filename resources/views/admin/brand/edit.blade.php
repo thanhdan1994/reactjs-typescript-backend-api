@@ -1,26 +1,5 @@
 @extends('layouts.admin.app')
 
-@section('head')
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Trang quản trị Du Lịch Cổ Thạch</title>
-        <!-- plugins:css -->
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/mdi/css/materialdesignicons.min.css')}}">
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/css/vendor.bundle.base.css')}}">
-        <!-- endinject -->
-        <!-- Plugin css for this page -->
-        <!-- End plugin css for this page -->
-        <!-- inject:css -->
-        <!-- endinject -->
-        <!-- Layout styles -->
-        <link rel="stylesheet" href="{{asset('admin/assets/css/style.css')}}">
-        <!-- End layout styles -->
-        <link rel="shortcut icon" href="{{asset('admin/assets/images/favicon.png')}}" />
-    </head>
-@endsection
-
 @section('content')
     <div class="page-header">
         <h3 class="page-title">Chỉnh sửa chuyên mục</h3>
@@ -45,7 +24,7 @@
                         </div>
                         <div class="form-group">
                             <label>Logo thương hiệu</label>
-                            <input type="file" name="featured_image" id="featured_image" class="file-upload-default">
+                            <input type="file" name="logo" id="featured_image" class="file-upload-default">
                             <div class="input-group col-xs-12">
                                 <span data-thumbnail="{!! $brand->logoUrl !!}" class="input-group-append file-upload-browse" style="background: url({!! $brand->logoUrl !!})">
                                 </span>

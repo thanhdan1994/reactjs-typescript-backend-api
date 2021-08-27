@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Products\Product;
-use App\Models\Products\MediaProduct;
 use App\Models\Products\Repositories\ProductRepository;
 use App\Models\Categories\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Models\Brands\Repositories\Interfaces\BrandRepositoryInterface;
+use App\Models\Images\Image;
+use App\Models\Images\ProductImage;
 use App\Models\Products\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Products\Requests\CreateProductRequest;
 use App\Models\Products\Requests\UpdateProductRequest;
 use App\Models\Products\Transformations\ProductTransformable;
 use App\Models\Tools\UploadableTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -46,7 +47,7 @@ class ProductController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Product::class);
-        $products = $this->productRepo->listProducts();
+        $products = $this->productRepo->getAllProducts();
         if (request()->has('q') && request()->input('q') != '') {
             $products = $this->productRepo->searchProduct(request()->input('q'));
         }
@@ -86,24 +87,12 @@ class ProductController extends Controller
         $this->authorize('create', ProductRepository::class);
         $data = $request->all();
         $data['status'] = $request->has('status');
+        $data['featured_image'] = $this->_uploadThumbnail($request->featured_image);
         $product = $this->productRepo->createProduct($data);
-        if ($request->file('featured_image')) {
-            $media = $product
-                ->addMedia($request->featured_image)
-                ->toMediaCollection('images');
-            $productRepo = new ProductRepository($product);
-            $productRepo->updateProduct(['featured_image' => $media->id]);
-        }
 
-        if ($request->get('images-base64')) {
-            MediaProduct::where('product_id', $product->id)->delete();
-            foreach ($request->get('images-base64') as $file) {
-                $media = $product->addMediaFromBase64($file)->usingFileName(Str::random(20).'.jpg')->toMediaCollection('images');
-                MediaProduct::create([
-                    'media_id' => $media->id,
-                    'product_id' => $product->id
-                ]);
-            }
+        // create product image
+        if ($request->has('ProductImages')) {
+            $this->__insertProductImages($request->ProductImages, $product->id);
         }
 
         return redirect()->route('admin.products.index')->with('message', 'Tạo bài viết mới thành công!');
@@ -154,25 +143,16 @@ class ProductController extends Controller
         $this->authorize('update', $product);
         $data = $request->all();
         $data['status'] = $request->has('status');
+        if ($request->hasFile('featured_image')) {
+            $data['featured_image'] = $this->_uploadThumbnail($request->featured_image);
+        }
         $product->update($data);
-        if ($request->file('featured_image')) {
-            $media = $product
-                ->addMedia($request->featured_image)
-                ->toMediaCollection('images');
-            $product->featured_image  = $media->id;
-            $product->save();
-        }
 
-        if ($request->get('images-base64')) {
-            MediaProduct::where('product_id', $product->id)->delete();
-            foreach ($request->get('images-base64') as $file) {
-                $media = $product->addMediaFromBase64($file)->usingFileName(Str::random(20).'.jpg')->toMediaCollection('images');
-                MediaProduct::create([
-                    'media_id' => $media->id,
-                    'product_id' => $product->id
-                ]);
-            }
+        // upsert/create product image
+        if ($request->has('ProductImages')) {
+            $this->__insertProductImages($request->ProductImages, $product->id);
         }
+        
         return redirect()->route('admin.products.index')->with('message', 'Cập nhập bài viết thành công!');
     }
 
@@ -188,5 +168,30 @@ class ProductController extends Controller
         $this->authorize('delete', $product);
         $product->delete();
         return redirect()->route('admin.products.index')->with('message', 'Sản phẩm có mã '. $id . ' đã được xóa thành công');
+    }
+
+    private function __insertProductImages(array $imagesId, $productId)
+    {
+        ProductImage::where(['product_id' => $productId])->delete();
+        collect($imagesId)->each(function ($imageId, $key) use ($productId) {
+            ProductImage::updateOrCreate(
+                ['product_id' => $productId, 'image_id' => $imageId],
+                ['sort' => $key + 1]
+            );
+        });
+        return true;
+    }
+
+    private function _uploadThumbnail($file)
+    {
+        $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '-thumbnail-' . Carbon::now()->timestamp;
+        $fileExt = $file->extension();
+        $file->storeAs('public/images', $fileName . '.' . $fileExt);
+        $image = Image::create([
+            'name' => $fileName,
+            'ext' => $fileExt,
+            'store_path' => 'storage/images'
+        ]);
+        return $image->id;
     }
 }

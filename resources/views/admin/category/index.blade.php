@@ -1,26 +1,5 @@
 @extends('layouts.admin.app')
 
-@section('head')
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Trang quản trị Du Lịch Cổ Thạch</title>
-        <!-- plugins:css -->
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/mdi/css/materialdesignicons.min.css')}}">
-        <link rel="stylesheet" href="{{asset('admin/assets/vendors/css/vendor.bundle.base.css')}}">
-        <!-- endinject -->
-        <!-- Plugin css for this page -->
-        <!-- End plugin css for this page -->
-        <!-- inject:css -->
-        <!-- endinject -->
-        <!-- Layout styles -->
-        <link rel="stylesheet" href="{{asset('admin/assets/css/style.css')}}">
-        <!-- End layout styles -->
-        <link rel="shortcut icon" href="{{asset('admin/assets/images/favicon.png')}}" />
-    </head>
-@endsection
-
 @section('content')
     <div class="page-header">
         <h3 class="page-title">Danh sách chuyên mục</h3>
@@ -66,12 +45,6 @@
                                 @if(\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())
                                 <td>
                                     <a href="{{ route('admin.categories.edit', $category->id) }}" type="button" class="btn btn-outline-info">Sửa</a>
-                                    <form method="post" action="{{route('admin.categories.destroy', $category->id)}}"
-                                          onsubmit="return confirm('Bạn chắc chắn muốn xóa chuyên mục này?');">
-                                        {{method_field('delete')}}
-                                        {{csrf_field()}}
-                                        <button type="submit" class="btn btn-outline-danger">Xóa</button>
-                                    </form>
                                 </td>
                                 @else
                                 <td>Bạn đếu có quyền chỉnh sửa nhé</td>

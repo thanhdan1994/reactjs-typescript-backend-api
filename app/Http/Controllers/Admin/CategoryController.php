@@ -69,7 +69,6 @@ class CategoryController extends Controller
     {
         $this->authorize('create', Category::class);
         $data = $request->except('_token', 'featured_image');
-        $data['slug'] = Str::slug($request->input('category'));
         $category = $this->categoryRepo->createCategory($data);
         if ($request->file('featured_image')) {
             $media = $category

@@ -4,13 +4,10 @@ namespace App\Models\Categories;
 
 use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Images\Image;
 
-class Category extends Model implements HasMedia
+class Category extends Model
 {
-    use InteractsWithMedia;
     /**
      * The attributes that are mass assignable.
      *
@@ -38,21 +35,14 @@ class Category extends Model implements HasMedia
         return $this->belongsToMany(static::class, 'parent')->orderBy('id', 'DESC');
     }
 
-    public function registerMediaCollections(Media $media = null) : void
-    {
-        $this->addMediaConversion('thumb-350')
-            ->width(350)
-            ->height(240);
-    }
-
     public function thumbnail()
     {
-        return $this->hasOne(Media::class, 'id', 'featured_image');
+        return $this->hasOne(Image::class, 'id', 'featured_image');
     }
 
     public function getThumbnailUrlAttribute()
     {
-        $thumbnail = 'https://kuruma-tabinavi.com/wp-content/themes/campingcardesktop/shared/img/default-camping-car.jpg';
+        $thumbnail = env('APP_URL') . DIRECTORY_SEPARATOR . 'images/none_image.png';
         if ($this->thumbnail) :
             $thumbnail = $this->thumbnail->getUrl('thumb-350');
         endif;

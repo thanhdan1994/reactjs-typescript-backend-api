@@ -3,17 +3,17 @@ namespace App\Models\Products;
 
 use App\Models\Brands\Brand;
 use App\Models\Categories\Category;
+use App\Models\Images\Image;
 use App\Models\Tools\SearchableTrait;
+use App\Models\Variants\Variant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Support\Str;
 
-class Product extends Model implements HasMedia
+class Product extends Model
 {
-    use InteractsWithMedia, SearchableTrait;
+    use SearchableTrait;
     /**
      * The attributes that are mass assignable.
      * @var array
@@ -60,6 +60,7 @@ class Product extends Model implements HasMedia
             'brands' => ['products.brand_id', 'brands.id'],
         ],
     ];
+    
 
     /**
      * @param string $text
@@ -92,30 +93,24 @@ class Product extends Model implements HasMedia
 
     public function images()
     {
-        return $this->belongsToMany(Media::class, 'media_product', 'product_id', 'media_id');
+        return $this->belongsToMany(Image::class, 'products_images', 'product_id', 'image_id')->orderByPivot('sort', 'asc');
     }
 
-    public function registerMediaCollections(Media $media = null) : void
+    public function variants()
     {
-
-        $this->addMediaConversion('thumb')
-            ->width(200)
-            ->height(150);
-        $this->addMediaConversion('thumb-350')
-            ->width(350)
-            ->height(240);
+        return $this->hasMany(Variant::class, 'product_id');
     }
 
     public function thumbnail()
     {
-        return $this->hasOne(Media::class, 'id', 'featured_image');
+        return $this->hasOne(Image::class, 'id', 'featured_image');
     }
 
     public function getThumbnailUrlAttribute()
     {
-        $thumbnail = 'https://kuruma-tabinavi.com/wp-content/themes/campingcardesktop/shared/img/default-camping-car.jpg';
+        $thumbnail = env('APP_URL') . DIRECTORY_SEPARATOR . 'images/none_image.png';
         if ($this->thumbnail) :
-            $thumbnail = $this->thumbnail->getUrl('thumb-350');
+            $thumbnail = $this->thumbnail->url;
         endif;
         return $thumbnail;
     }

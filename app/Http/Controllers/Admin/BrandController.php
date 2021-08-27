@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brands\Brand;
-use Illuminate\Http\Request;
 use App\Models\Brands\Repositories\BrandRepository;
 use App\Models\Brands\Repositories\Interfaces\BrandRepositoryInterface;
-use Illuminate\Support\Str;
+use App\Models\Brands\Requests\CreateBrandRequest;
 use App\Models\Brands\Requests\UpdateBrandRequest;
+use App\Models\Images\Image;
+use Carbon\Carbon;
 
 class BrandController extends Controller
 {
@@ -25,7 +25,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Brand::class);
+        $this->authorize('viewAny', BrandRepository::class);
         $categories = $this->brandRepo->listBrands();
         return view('admin.brand.index', [
             'brands' => $this->brandRepo->paginateArrayResults(
@@ -42,18 +42,35 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', BrandRepository::class);
+        $brands = $this->brandRepo->listBrands();
+        return view('admin.brand.create', compact('brands'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  CreateBrandRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateBrandRequest $request)
     {
-        //
+        $this->authorize('create', BrandRepository::class);
+        $data = $request->all();
+        if ($request->file('logo')) {
+            $file = $request->logo;
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '-thumbnail-' . Carbon::now()->timestamp;
+            $fileExt = $file->extension();
+            $file->storeAs('public/images', $fileName . '.' . $fileExt);
+            $image = Image::create([
+                'name' => $fileName,
+                'ext' => $fileExt,
+                'store_path' => 'storage/images'
+            ]);
+            $data['logo'] = $image->id;
+            $this->brandRepo->createBrand($data);
+        }
+        return redirect()->route('admin.brands.index')->with('message', 'Thêm thương hiệu mới thành công!');
     }
 
     /**
@@ -83,7 +100,7 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateCategoryRequest $request
+     * @param UpdateBrandRequest $request
      * @param int $id
      * @return Response
      * @throws \App\Models\Categories\Exceptions\BrandUpdateException
@@ -93,15 +110,20 @@ class BrandController extends Controller
     {
         $brand = $this->brandRepo->findBrandById($id);
         $this->authorize('update', $brand);
-        $brandRepo = new BrandRepository($brand);
-        $data = $request->except('_token', '_method', 'featured_image');
-        if ($request->file('featured_image')) {
-            $media = $brand
-                ->addMedia($request->featured_image)
-                ->toMediaCollection('images');
-            $data['logo'] = $media->id;
+        $data = $request->all();
+        if ($request->file('logo')) {
+            $file = $request->logo;
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '-thumbnail-' . Carbon::now()->timestamp;
+            $fileExt = $file->extension();
+            $file->storeAs('public/images', $fileName . '.' . $fileExt);
+            $image = Image::create([
+                'name' => $fileName,
+                'ext' => $fileExt,
+                'store_path' => 'storage/images'
+            ]);
+            $data['logo'] = $image->id;
+            $brand->update($data);
         }
-        $brandRepo->updateBrand($data);
         return redirect()->route('admin.brands.index')->with('message', 'Cập nhật thương hiệu thành công!');
     }
 

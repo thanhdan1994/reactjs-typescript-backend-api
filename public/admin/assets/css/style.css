@@ -13393,16 +13393,3 @@ span.file-upload-browse {
     width: 200px; height: 150px;
     position: relative;
 }
-
-.form-group label.js-close-image-preview {
-    position: absolute;
-    color: #1100ff;
-    z-index: 1;
-    width: 18px;
-    height: 18px;
-    font-size: 18px;
-    background: #fff;
-    border-radius: 50%;
-    align-items: center;
-    margin: 0;
-}

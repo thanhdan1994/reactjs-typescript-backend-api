@@ -18,21 +18,20 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'DashboardController@index')->name('dashboard');
             Route::resource('categories', 'CategoryController');
             Route::resource('brands', 'BrandController');
-            Route::resource('posts', 'PostController');
-            Route::resource('places', 'PlaceController');
             Route::resource('products', 'ProductController');
+
+            Route::get('products/{product_id}/variants/create', 'VariantController@create')->name('variants.create');
+            Route::get('products/{product_id}/variants/{id}/edit', 'VariantController@edit')->name('variants.edit');
+            Route::put('products/{product_id}/variants/{id}', 'VariantController@update')->name('variants.update');
+            Route::delete('products/{product_id}/variants/{id}', 'VariantController@destroy')->name('variants.destroy');
+            Route::post('products/{product_id}/variants', 'VariantController@store')->name('variants.store');
+
             Route::resource('users', 'UserController');
             Route::resource('medias', 'MediaController');
+            Route::post('upload-image', 'ImageController@upload')->name('images.upload');
+            Route::delete('image', 'ImageController@destroy')->name('images.destroy');
         });
     });
 });
 
 Auth::routes();
-
-Route::get('/', function () { return view('index'); });
-Route::get('list-posts.html', function () { return view('index'); });
-Route::get('product/{id}', function () { return view('index'); });
-Route::get('post/{id}', function () { return view('index'); });
-Route::get('place/{id}', function () { return view('index'); });
-Route::get('list-places.html', function () { return view('index'); });
-Route::get('list-products.html', function () { return view('index'); });

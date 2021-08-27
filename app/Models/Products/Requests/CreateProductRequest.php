@@ -14,6 +14,7 @@ class CreateProductRequest extends FormRequest
             'category_id' => 'required',
             'brand_id' => 'required',
             'featured_image' => 'required',
+            'unit' => 'required',
         ];
     }
 }

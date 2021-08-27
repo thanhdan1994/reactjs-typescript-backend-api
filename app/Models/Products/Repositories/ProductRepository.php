@@ -26,6 +26,11 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         $this->model = $product;
     }
 
+    public function getAllProducts(): Collection
+    {
+        return $this->model->orderBy('id', 'desc')->get();
+    }
+
     public function createProduct(array $data): Product
     {
         // TODO: Implement createProduct() method.
@@ -79,7 +84,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         if (!empty($text)) {
             return $this->model->searchProduct($text);
         } else {
-            return $this->listProducts();
+            return $this->getAllProducts();
         }
     }
 

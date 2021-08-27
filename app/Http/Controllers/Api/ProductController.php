@@ -23,7 +23,7 @@ class ProductController extends Controller
     {
         $limit = $request->limit ?: 10;
         $page = $request->page ?: 1;
-        $condition = [];
+        $condition = ['status' => 1];
         if ($request->has('category')) {
             $condition['category_id'] =  $request->category;
         }
