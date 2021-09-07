@@ -7,6 +7,8 @@ use App\Models\Users\Repositories\Interfaces\UserRepositoryInterface;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Carbon\Carbon;
+use App\Models\Images\Image;
 
 class UserController extends Controller
 {
@@ -93,10 +95,16 @@ class UserController extends Controller
         $this->authorize('update', $user);
         $user->name = $request->name;
         if ($request->file('featured_image')) {
-            $media = $user
-                ->addMedia($request->featured_image)
-                ->toMediaCollection('images');
-            $user->featured_image = $media->id;
+            $file = $request->featured_image;
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '-thumbnail-' . Carbon::now()->timestamp;
+            $fileExt = $file->extension();
+            $file->storeAs('public/images', $fileName . '.' . $fileExt);
+            $image = Image::create([
+                'name' => $fileName,
+                'ext' => $fileExt,
+                'store_path' => 'storage/images'
+            ]);
+            $user->featured_image = $image->id;
         }
         $user->save();
         return redirect()->route('admin.users.edit', $id)->with('message', 'Cập nhập thông tin thành công!');

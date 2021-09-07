@@ -39,37 +39,29 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th> STT </th>
+                            <th></th>
                             <th> Tên người dùng </th>
                             <th> Email </th>
                             <th> Ngày tạo </th>
                             <th> Vai trò </th>
-                            <th> Hành động </th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($users as $key => $user)
+                        @foreach($users as $user)
                             <tr>
                                 <td class="py-1">
-                                    @if(isset($_GET['page']))
-                                        #{{(($_GET['page'] * config('constants.admin.paginate')) - config('constants.admin.paginate')) + ($key + 1)}}
-                                    @else
-                                        #{{$key + 1}}
-                                    @endif
+                                    <a href="{{ route('admin.users.edit', $user->id) }}">
+                                        <img src="{!! $user->thumbnailUrl !!}" style="width: 40px; height: 40px"/>
+                                    </a>
                                 </td>
-                                <td>{!! $user->name !!}</td>
+                                <td>
+                                    <a href="{{ route('admin.users.edit', $user->id) }}">
+                                        {!! $user->name !!}
+                                    </a>
+                                </td>
                                 <td>{!! $user->email !!}</td>
                                 <td>{!! $user->created_at !!}</td>
                                 <td> vai trò </td>
-                                <td>
-                                    <a href="{{ route('admin.users.edit', $user->id) }}" type="button" class="btn btn-outline-info">Sửa</a>
-                                    <form method="post" action="{{route('admin.users.destroy', $user->id)}}"
-                                          onsubmit="return confirm('Bạn chắc chắn muốn xóa người dùng này?');">
-                                        {{method_field('delete')}}
-                                        {{csrf_field()}}
-                                        <button type="submit" class="btn btn-outline-danger">Xóa</button>
-                                    </form>
-                                </td>
                             </tr>
                         @endforeach
                         </tbody>

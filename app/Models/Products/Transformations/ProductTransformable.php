@@ -34,6 +34,7 @@ trait ProductTransformable
         $prod->excerpt = $product->excerpt;
         $prod->content = $product->content;
         $prod->price = number_format($product->amount, 0,",",".");
+        $prod->priceInt = $product->amount;
         $prod->data = $product->parameters;
         $prod->thumbnail = $product->thumbnailUrl;
         $productImages = [];

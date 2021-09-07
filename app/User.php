@@ -52,7 +52,7 @@ class User extends Authenticatable
     {
         $thumbnail = env('APP_URL') . DIRECTORY_SEPARATOR . 'images/none_image.png';
         if ($this->thumbnail !== null) :
-            $thumbnail = $this->thumbnail->getUrl('thumb-350');
+            $thumbnail = $this->thumbnail->url;
         endif;
         return $thumbnail;
     }
